@@ -1,0 +1,9 @@
+{
+    "git.ignoreLimitWarning": true,
+    "python.pythonPath": "venv/bin/python3.6",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+
+    "python.linting.pylintArgs": ["--reports", "12", "--disable-msg", "I0011", "--load-plugins", "pylint_django"],
+
+}
