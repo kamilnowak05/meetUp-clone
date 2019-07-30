@@ -50,8 +50,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255, blank=False)
     host = models.BooleanField(default=False)
     interests = models.CharField(max_length=2, choices=MY_INTERESTS)
+    admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    photo = models.ImageField(upload_to="group_photos", null=True)
+
 
     objects = UserManager()
 

@@ -6,13 +6,15 @@ from core import models
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
-    list_display = ['email', 'first_name', 'last_name']
+    list_display = ['email', 'user_id', 'host', 'is_staff','admin','photo']
+    search_fields = ('email', 'user_id', 'host', 'is_staff','admin')
+    list_filter = ('email', 'host')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal Info'), {'fields': ('first_name', 'last_name')}),
+        (_('Personal Info'), {'fields': ('first_name', 'last_name','host','interests','photo')}),
         (
             _('Permissions'),
-            {'fields': ('is_active', 'is_staff', 'is_superuser')}
+            {'fields': ('is_active', 'is_staff', 'is_superuser', 'admin')}
         ),
         (_('Important date'), {'fields': ('last_login',)})
     )

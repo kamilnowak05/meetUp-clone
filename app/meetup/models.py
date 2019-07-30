@@ -1,8 +1,6 @@
 import uuid
 
 from django.db import models
-from django.utils import timezone
-
 
 
 MY_INTERESTS = (
@@ -20,7 +18,7 @@ MY_INTERESTS = (
 
 
 class Interest(models.Model):
-    interest = models.CharField(max_length=255,blank=False, null=False)
+    interest = models.CharField(max_length=255, blank=False, null=False)
 
     def __str__(self):
         return self.interest
@@ -33,6 +31,7 @@ class Group(models.Model):
     description = models.TextField()
     category = models.ForeignKey(Interest, on_delete=models.CASCADE)
     location = models.CharField(max_length=55,blank=False, null=False)
+    photo = models.ImageField(upload_to="group_photos", null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -53,9 +52,10 @@ class Meetup(models.Model):
     host = models.ForeignKey('core.User', on_delete=models.CASCADE)
     group = models.ForeignKey(Group ,on_delete=models.CASCADE)
     description = models.TextField()
-    timestamp = models.DateTimeField(default=timezone.now)
+    timestamp = models.DateTimeField(auto_now_add=True)
     fee = models.IntegerField(default=0)
     slots = models.IntegerField(default= 10)
+    photo = models.ImageField(upload_to="group_photos", null=True, blank=True)
 
     def __str__(self):
         return self.name
