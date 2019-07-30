@@ -1,6 +1,10 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
+
+from meetup.models import MY_INTERESTS
 
 
 class UserManager(BaseUserManager):
@@ -15,6 +19,13 @@ class UserManager(BaseUserManager):
 
         return user
 
+    def create_host(self,email,password):
+        user = self.create_user(email,password=password)
+        user.host = True
+        user.save(using=self._db)
+
+        return user
+
     def create_superuser(self, email, password):
         """Creates and saves a new super user"""
         user = self.create_user(email, password)
@@ -24,12 +35,21 @@ class UserManager(BaseUserManager):
 
         return user
 
+    def create_staff(self,email,password):
+        user = self.create_user(email,password=password)
+        user.staff = True
+        user.save(using=self._db)
+        return user
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email of username"""
+    user_id = models.UUIDField(unique=True, default=uuid.uuid4)
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255, blank=False)
     last_name = models.CharField(max_length=255, blank=False)
+    host = models.BooleanField(default=False)
+    interests = models.CharField(max_length=2, choices=MY_INTERESTS)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
