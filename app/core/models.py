@@ -4,8 +4,19 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 
-from meetup.models import MY_INTERESTS
 
+MY_INTERESTS = (
+                ('Ad','Adventure'),
+                ('Fd','Food'),
+                ('Th','Tech'),
+                ('Fy','Family'),
+                ('Ht','Health'),
+                ('St','Sports'),
+                ('Fi','Film'),
+                ('Bk','Books'),
+                ('De','Dance'),
+                ('Ar','Arts'),
+                )
 
 class UserManager(BaseUserManager):
 
@@ -46,14 +57,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email of username"""
     user_id = models.UUIDField(unique=True, default=uuid.uuid4)
     email = models.EmailField(max_length=255, unique=True)
-    first_name = models.CharField(max_length=255, blank=False)
-    last_name = models.CharField(max_length=255, blank=False)
+    first_name = models.CharField(max_length=255, blank=False, verbose_name='first name')
+    last_name = models.CharField(max_length=255, blank=False, verbose_name='last name')
     host = models.BooleanField(default=False)
     interests = models.CharField(max_length=2, choices=MY_INTERESTS)
     admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    photo = models.ImageField(upload_to="group_photos", null=True)
+    photo = models.ImageField(upload_to="user/images", null=True)
 
 
     objects = UserManager()
@@ -62,3 +73,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def get_full_name(self):
+        # The user is identified by their email address
+        return "{} {}".format(self.first_name, self.last_name)

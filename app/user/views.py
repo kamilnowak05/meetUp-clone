@@ -5,8 +5,10 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from user.serlializers import UserSerializer, AuthTokenSerializer
+from user.serializers import UserSerializer, AuthTokenSerializer
 from core.models import User
+
+from app.permissions import IsOwnerOrAdminOrReadOnly
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -22,6 +24,7 @@ class CreateTokenView(ObtainAuthToken):
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
     """Manage the authenticated user"""
+
     serializer_class = UserSerializer
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)

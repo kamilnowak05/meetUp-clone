@@ -1,6 +1,6 @@
 {
     "git.ignoreLimitWarning": true,
-    "python.pythonPath": "venv/bin/python3.6",
+    "python.pythonPath": "venv/bin/python",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
 
