@@ -7,7 +7,7 @@ class IsOwnerOrAdminOrReadOnly(BasePermission):
             return True
         try:
             if(request.user):
-                return obj.user == request.user or request.user.is_admin
+                return obj.user == request.user or request.user.admin
         except:
             pass
 
@@ -23,4 +23,4 @@ class IsAdminOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method == 'GET':
             return True
-        return request.user.is_admin
+        return request.user.admin

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, authentication
 from rest_framework import generics, views
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
 
@@ -39,9 +39,9 @@ class EventViewSet(viewsets.ModelViewSet):
 
 
 class EventCategoryViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    queryset = EventCategory.objects.all()
+    permission_classes = [IsAdminUser]
     serializer_class = EventCategorySerializer
+    queryset = EventCategory.objects.all()
 
 
 class EventReviewViewSet(viewsets.ModelViewSet):

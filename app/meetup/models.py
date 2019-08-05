@@ -1,11 +1,11 @@
 import uuid
 
 from django.db import models
-from core.models import User
+from core.models import User, CATEGORY
 
 
 class EventCategory(models.Model):
-    category = models.CharField(max_length=100)
+    category = models.CharField(max_length=2, choices=CATEGORY)
     active = models.BooleanField(default=True)
     image = models.ImageField(upload_to='category/images')
 

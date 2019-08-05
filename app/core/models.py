@@ -5,17 +5,17 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 
 
-MY_INTERESTS = (
-                ('Ad','Adventure'),
-                ('Fd','Food'),
-                ('Th','Tech'),
-                ('Fy','Family'),
-                ('Ht','Health'),
-                ('St','Sports'),
-                ('Fi','Film'),
-                ('Bk','Books'),
-                ('De','Dance'),
-                ('Ar','Arts'),
+CATEGORY = (
+                ('Adventure','Adventure'),
+                ('Food','Food'),
+                ('Tech','Tech'),
+                ('Family','Family'),
+                ('Health','Health'),
+                ('Sports','Sports'),
+                ('Film','Film'),
+                ('Books','Books'),
+                ('Dance','Dance'),
+                ('Arts','Arts'),
                 )
 
 class UserManager(BaseUserManager):
@@ -60,7 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, blank=False, verbose_name='first name')
     last_name = models.CharField(max_length=255, blank=False, verbose_name='last name')
     host = models.BooleanField(default=False)
-    interests = models.CharField(max_length=2, choices=MY_INTERESTS)
+    interests = models.CharField(max_length=2, choices=CATEGORY)
     admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
