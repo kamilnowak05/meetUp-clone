@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Event, EventCategory, EventReview, EventBooking
 from user.serializers import UserSerializer
 
+
 class EventCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EventCategory
@@ -15,9 +16,9 @@ class EventReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventReview
         fields = (
-            'id', 'event', 'rating', 'timestamp', 'user', 'user_detail', 'event_detail',
-            'rating', 'review',
+            'id', 'event', 'rating', 'timestamp', 'user_detail', 'event_detail', 'rating', 'review',
         )
+        read_only_fields = ('user', )
 
     def get_user_detail(self, obj):
         return UserSerializer(obj.user).data
@@ -32,7 +33,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = (
-            'id', 'title', 'about', 'user', 'rating',
+             'id', 'title', 'about', 'rating',
              'image', 'category',
              'reviews', 'timestamp',
              'user_detail', 'category_detail',
@@ -41,6 +42,7 @@ class EventSerializer(serializers.ModelSerializer):
              'company_phone1', 'company_phone2', 'company_email', 'company_address',
              'company_office', 'company_web_address', 'approved'
              )
+        read_only_fields = ('user', 'rating', 'approved')
 
     def get_reviews(self, obj):
         reviews = EventReview.objects.filter(event=obj)

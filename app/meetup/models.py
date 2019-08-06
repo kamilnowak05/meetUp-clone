@@ -1,11 +1,13 @@
 import uuid
 
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 from core.models import User, CATEGORY
 
 
 class EventCategory(models.Model):
-    category = models.CharField(max_length=2, choices=CATEGORY)
+    category = models.CharField(max_length=9, choices=CATEGORY)
     active = models.BooleanField(default=True)
     image = models.ImageField(upload_to='category/images')
 
@@ -36,7 +38,7 @@ class Event(models.Model):
     company_address = models.CharField(max_length=240)
     company_office = models.CharField(max_length=240)
     company_web_address = models.URLField(max_length=200, blank=True, null=True)
-    rating = models.PositiveIntegerField(default=0)
+    rating = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
 
     approved = models.BooleanField(default=False)
 
@@ -46,7 +48,7 @@ class Event(models.Model):
 class EventReview(models.Model):
     user = models.ForeignKey(User, related_name='user_review', on_delete=models.CASCADE)
     event = models.ForeignKey('Event', related_name='event_review', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(default=0)
+    rating = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     review = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

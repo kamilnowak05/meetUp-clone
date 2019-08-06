@@ -14,7 +14,7 @@ from django.db.models import Q
 
 
 class EventViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly,IsOwnerOrAdminOrReadOnly]
+    permission_classes = [IsOwnerOrAdminOrReadOnly]
     serializer_class = EventSerializer
     def get_queryset(self):
         query = Event.objects.all()
@@ -27,9 +27,9 @@ class EventViewSet(viewsets.ModelViewSet):
             query = query[:no]
         if(self.request.GET.get('user')):
             query = query.filter(user=self.request.GET.get('user'))
-        if(self.request.GET.get('q')):
+        if(self.request.GET.get('title')):
             query = query.filter(
-                Q(title__icontains=self.request.GET.get('q'))
+                Q(title__icontains=self.request.GET.get('title'))
             )
         if(self.request.GET.get('category')):
             query = query.filter(
@@ -37,9 +37,12 @@ class EventViewSet(viewsets.ModelViewSet):
             )
         return query
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class EventCategoryViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReadOnly]
     serializer_class = EventCategorySerializer
     queryset = EventCategory.objects.all()
 
@@ -58,8 +61,11 @@ class EventReviewViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(review__icontains=q)
         return queryset
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 class EventBookingViewSet(viewsets.ModelViewSet):
-    permission_classes = [ IsOwnerOrAdminOrReadOnly]
+    permission_classes = [IsOwnerOrAdminOrReadOnly]
     serializer_class = EventBookingSerializer
     def get_queryset(self):
         queryset = EventBooking.objects.all()

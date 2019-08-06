@@ -60,7 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, blank=False, verbose_name='first name')
     last_name = models.CharField(max_length=255, blank=False, verbose_name='last name')
     host = models.BooleanField(default=False)
-    interests = models.CharField(max_length=2, choices=CATEGORY)
+    interests = models.CharField(max_length=9, choices=CATEGORY)
     admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
