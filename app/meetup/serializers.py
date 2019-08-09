@@ -10,13 +10,21 @@ class EventCategorySerializer(serializers.ModelSerializer):
             'id', 'category', 'image', 'active'
         )
 
+
 class EventReviewSerializer(serializers.ModelSerializer):
     user_detail = serializers.SerializerMethodField()
     event_detail = serializers.SerializerMethodField()
+
     class Meta:
         model = EventReview
         fields = (
-            'id', 'event', 'rating', 'timestamp', 'user_detail', 'event_detail', 'rating', 'review',
+            'id',
+            'event',
+            'rating',
+            'timestamp',
+            'user_detail',
+            'event_detail',
+            'review',
         )
         read_only_fields = ('user', )
 
@@ -26,10 +34,12 @@ class EventReviewSerializer(serializers.ModelSerializer):
     def get_event_detail(self, obj):
         return EventSerializer(obj.event).data
 
+
 class EventSerializer(serializers.ModelSerializer):
     reviews = serializers.SerializerMethodField()
     category_detail = serializers.SerializerMethodField()
     user_detail = serializers.SerializerMethodField()
+
     class Meta:
         model = Event
         fields = (
@@ -37,10 +47,11 @@ class EventSerializer(serializers.ModelSerializer):
              'image', 'category',
              'reviews', 'timestamp',
              'user_detail', 'category_detail',
-             'location', 'event_date', 'ticket_amount_first', 'ticket_amount_second',
-             'event_time_start', 'event_time_end', 'chief_guest', 'company_name',
-             'company_phone1', 'company_phone2', 'company_email', 'company_address',
-             'company_office', 'company_web_address', 'approved'
+             'location', 'event_date', 'ticket_amount_first',
+             'ticket_amount_second', 'event_time_start', 'event_time_end',
+             'chief_guest', 'company_name', 'company_phone1', 'company_phone2',
+             'company_email', 'company_address', 'company_office',
+             'company_web_address', 'approved'
              )
         read_only_fields = ('user', 'rating', 'approved')
 
@@ -68,27 +79,35 @@ class EventSerializer(serializers.ModelSerializer):
         category = EventCategorySerializer(category_obj).data
         return category
 
+
 class EventBookingSerializer(serializers.ModelSerializer):
     event_title = serializers.SerializerMethodField()
     id = serializers.SerializerMethodField()
+
     class Meta:
         model = EventBooking
-        fields =  [
+        fields = (
             'id',
-            'user',
             'user_id',
             'event',
             'event_title',
-            'timestamp',
             'quantity'
-            ]
+        )
+        read_only_fields = ('user', 'timestamp')
 
     def get_id(self, obj):
         return obj.user.id
+
     def get_event_title(self, obj):
         return obj.event.title
 
+
 class EventBookingCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model=EventBooking
-        fields ='__all__'
+        model = EventBooking
+        fields = '__all__'
+
+
+class ApproveEventSerializer(serializers.ModelSerializer):
+    event_title = serializers.SerializerMethodField()

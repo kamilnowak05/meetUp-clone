@@ -1,4 +1,4 @@
-from rest_framework import generics, authentication, permissions, viewsets
+from rest_framework import generics, permissions, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from rest_framework.response import Response
@@ -7,8 +7,6 @@ from django.shortcuts import get_object_or_404
 
 from user.serializers import UserSerializer, AuthTokenSerializer
 from core.models import User
-
-from app.permissions import IsOwnerOrAdminOrReadOnly
 
 
 class CreateUserView(generics.CreateAPIView):

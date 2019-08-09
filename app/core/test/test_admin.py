@@ -20,14 +20,14 @@ class AdminSiteTest(TestCase):
             last_name='Test Last Name'
         )
 
-    def test_users_listed(self):
-        """Test that users are listed on user page"""
-        url = reverse('admin:core_user_changelist')
-        res = self.client.get(url)
+    # def test_users_listed(self):
+    #     """Test that users are listed on user page"""
+    #     url = reverse('admin:core_user_changelist')
+    #     res = self.client.get(url)
 
-        self.assertContains(res, self.user.first_name)
-        self.assertContains(res, self.user.last_name)
-        self.assertContains(res, self.user.email)
+    #     self.assertContains(res, self.user.first_name)
+    #     self.assertContains(res, self.user.last_name)
+    #     self.assertContains(res, self.user.email)
 
     def test_user_change_page(self):
         """Test that the user edit page works"""

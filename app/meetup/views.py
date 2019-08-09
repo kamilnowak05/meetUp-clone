@@ -1,21 +1,23 @@
-from django.shortcuts import render
-from rest_framework import viewsets, status, authentication
-from rest_framework import generics, views
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
+from rest_framework import viewsets, status
+from rest_framework import views
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, \
+    IsAdminUser
 
-from app.permissions import *
+from app.permissions import IsOwnerOrAdminOrReadOnly, IsOwnerOrReadOnly, \
+    IsAdminOrReadOnly
 
 from django.db.models import Q
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
-from .serializers import *
+from .serializers import EventCategorySerializer, EventReviewSerializer, \
+    EventSerializer, EventBookingSerializer, EventBookingCreateSerializer, \
+    ApproveEventSerializer
 from .models import Event, EventCategory, EventReview, EventBooking
-from django.db.models import Q
 
 
 class EventViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrAdminOrReadOnly]
     serializer_class = EventSerializer
+
     def get_queryset(self):
         query = Event.objects.all()
         if(self.request.GET.get('approved') == 'true'):
@@ -50,6 +52,7 @@ class EventCategoryViewSet(viewsets.ModelViewSet):
 class EventReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrAdminOrReadOnly]
     serializer_class = EventReviewSerializer
+
     def get_queryset(self):
         queryset = EventReview.objects.all()
         user = self.request.GET.get('user')
@@ -64,9 +67,11 @@ class EventReviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
 class EventBookingViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsOwnerOrAdminOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = EventBookingSerializer
+
     def get_queryset(self):
         queryset = EventBooking.objects.all()
         user = self.request.GET.get('user')
@@ -78,13 +83,16 @@ class EventBookingViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(event__title__icontains=q)
         return queryset
 
-class EventBookingCreate(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwnerOrAdminOrReadOnly]
+
+class EventBookingCreateViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = EventBooking.objects.all()
     serializer_class = EventBookingCreateSerializer
 
+
 class ApproveEvent(views.APIView):
     permission_classes = [IsAdminUser]
+    serializer_class = ApproveEventSerializer
 
     def get(self, request):
         event_id = request.GET.get('event')
@@ -92,8 +100,17 @@ class ApproveEvent(views.APIView):
         if event:
             event.approved = True
             event.save()
-            return Response({"message":"Event Approved"}, status=status.HTTP_200_OK)
-        return Response({"message": "Invalid url"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "Event Approved"},
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {"message": "Invalid url"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+# Nie robotajet ;( \/ wyswietla co ma, ale nie zmienia danych
 
 class ActivateCategory(views.APIView):
     permission_classes = [IsAdminUser]
@@ -101,14 +118,23 @@ class ActivateCategory(views.APIView):
     def get(self, request):
         category = request.GET.get('category')
         activate = request.GET.get('activate')
-        category = EventCategory.objects.get(id=category)
+        category = EventCategory.objects.get(pk=category)
         if category:
             if activate == str(1):
                 category.active = True
                 category.save()
-                return Response({"message":"Category Activated"}, status=status.HTTP_200_OK)
+                return Response(
+                    {"message": "Category Activated"},
+                    status=status.HTTP_200_OK
+                )
             elif activate == str(0):
-                category.activate = False
+                category.active = False
                 category.save()
-                return Response({"message":"Category Deactivated"}, status=status.HTTP_200_OK)
-        return Response({"message": "Something went wrong"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"message": "Category Deactivated"},
+                    status=status.HTTP_200_OK
+                )
+        return Response(
+            {"message": "Something went wrong"},
+            status=status.HTTP_400_BAD_REQUEST
+        )

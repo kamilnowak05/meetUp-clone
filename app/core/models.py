@@ -6,17 +6,18 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
 
 
 CATEGORY = (
-                ('Adventure','Adventure'),
-                ('Food','Food'),
-                ('Tech','Tech'),
-                ('Family','Family'),
-                ('Health','Health'),
-                ('Sports','Sports'),
-                ('Film','Film'),
-                ('Books','Books'),
-                ('Dance','Dance'),
-                ('Arts','Arts'),
-                )
+    ('Adventure', 'Adventure'),
+    ('Food', 'Food'),
+    ('Tech', 'Tech'),
+    ('Family', 'Family'),
+    ('Health', 'Health'),
+    ('Sports', 'Sports'),
+    ('Film', 'Film'),
+    ('Books', 'Books'),
+    ('Dance', 'Dance'),
+    ('Arts', 'Arts'),
+)
+
 
 class UserManager(BaseUserManager):
 
@@ -30,8 +31,8 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_host(self,email,password):
-        user = self.create_user(email,password=password)
+    def create_host(self, email, password):
+        user = self.create_user(email, password=password)
         user.host = True
         user.save(using=self._db)
 
@@ -46,8 +47,8 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_staff(self,email,password):
-        user = self.create_user(email,password=password)
+    def create_staff(self, email, password):
+        user = self.create_user(email, password=password)
         user.staff = True
         user.save(using=self._db)
         return user
@@ -57,15 +58,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email of username"""
     user_id = models.UUIDField(unique=True, default=uuid.uuid4)
     email = models.EmailField(max_length=255, unique=True)
-    first_name = models.CharField(max_length=255, blank=False, verbose_name='first name')
-    last_name = models.CharField(max_length=255, blank=False, verbose_name='last name')
+    first_name = models.CharField(
+        max_length=255, blank=False, verbose_name='first name')
+    last_name = models.CharField(
+        max_length=255, blank=False, verbose_name='last name')
     host = models.BooleanField(default=False)
     interests = models.CharField(max_length=9, choices=CATEGORY)
     admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    photo = models.ImageField(upload_to="user/images", null=True)
-
+    photo = models.ImageField(upload_to="user/images", null=True, blank=True)
 
     objects = UserManager()
 

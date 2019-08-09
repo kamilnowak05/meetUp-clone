@@ -1,6 +1,7 @@
 from django.urls import path, include
 
-from meetup.views import ApproveEvent, EventViewSet, EventCategoryViewSet, EventReviewViewSet, EventBookingViewSet
+from meetup.views import ApproveEvent, EventViewSet, EventCategoryViewSet, \
+    EventReviewViewSet, EventBookingViewSet, ActivateCategory
 
 from rest_framework.routers import DefaultRouter
 
@@ -19,4 +20,6 @@ router.register(r'event-booking', EventBookingViewSet,
 urlpatterns = [
     path('', include(router.urls)),
     path('approve/', ApproveEvent.as_view(), name='approve'),
+    path('activate-category/', ActivateCategory.as_view(),
+         name='activate-category'),
 ]

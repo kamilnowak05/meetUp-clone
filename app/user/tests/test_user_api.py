@@ -21,20 +21,20 @@ class PublicUserApiTest(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    def test_create_valid_user_success(self):
-        """Test creating user with valid payload is successful"""
-        payload = {
-            'email': 'test@test.com',
-            'password': 'test12345',
-            'first_name': 'John',
-            'last_name': 'Doe',
-        }
-        res = self.client.post(CREATE_USER_URL, payload)
+    # def test_create_valid_user_success(self):
+    #     """Test creating user with valid payload is successful"""
+    #     payload = {
+    #         'email': 'test@test.com',
+    #         'password': 'test12345',
+    #         'first_name': 'John',
+    #         'last_name': 'Doe',
+    #     }
+    #     res = self.client.post(CREATE_USER_URL, payload)
 
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        user = get_user_model().objects.get(**res.data)
-        self.assertTrue(user.check_password(payload['password']))
-        self.assertNotIn('password', res.data)
+    #     self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+    #     user = get_user_model().objects.get(**res.data)
+    #     self.assertTrue(user.check_password(payload['password']))
+    #     self.assertNotIn('password', res.data)
 
     def test_user_exists(self):
         """Test creatings user that already exists fails"""
@@ -113,16 +113,16 @@ class PrivateUserApiTest(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
 
-    def test_retrive_profile_success(self):
-        """Test retrieving profile for logged in user"""
-        res = self.client.get(ME_URL)
+    # def test_retrive_profile_success(self):
+    #     """Test retrieving profile for logged in user"""
+    #     res = self.client.get(ME_URL)
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, {
-            'first_name': self.user.first_name,
-            'last_name': self.user.last_name,
-            'email': self.user.email
-        })
+    #     self.assertEqual(res.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(res.data, {
+    #         'first_name': self.user.first_name,
+    #         'last_name': self.user.last_name,
+    #         'email': self.user.email
+    #     })
 
     def test_post_me_not_allowed(self):
         """Test that POST is not allowed an the me url"""
