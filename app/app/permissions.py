@@ -20,7 +20,16 @@ class IsOwnerOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method == 'GET':
             return True
-        return obj.user == request.user
+        return obj.owner == request.user
+
+
+class IsOwnerGroupOrReadOnly(BasePermission):
+    message = "You have to be owner of this object"
+
+    def has_object_permission(self, request, view, obj):
+        if request.method == 'GET':
+            return True
+        return 'group.owner_id' == request.user.id
 
 
 class IsOwnerOrAdmin(BasePermission):

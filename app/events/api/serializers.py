@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from events.models import Event, EventCategory, EventReview, EventMember
+from events.models import Event, EventCategory, EventReview
 from users.api.serializers import UserSerializer
 
 
@@ -37,21 +37,16 @@ class EventReviewSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     reviews = serializers.SerializerMethodField()
-    category_detail = serializers.SerializerMethodField()
-    user_detail = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
         fields = (
-             'id', 'title', 'about', 'rating',
-             'image', 'category',
-             'reviews', 'timestamp',
-             'user_detail', 'category_detail',
-             'location', 'event_date', 'ticket_amount_first',
-             'ticket_amount_second', 'event_time_start', 'event_time_end',
-             'chief_guest', 'approved'
-             )
-        read_only_fields = ('user', 'rating', 'approved')
+            'id', 'owner_group', 'title', 'about',
+            'rating', 'image', 'category', 'reviews', 'timestamp',
+            'location', 'event_date', 'event_time_start',
+            'event_time_end', 'chief_guest', 'member'
+        )
+        read_only_fields = ('id', 'rating', 'member')
 
     def get_reviews(self, obj):
         reviews = EventReview.objects.filter(event=obj)
@@ -67,40 +62,45 @@ class EventSerializer(serializers.ModelSerializer):
             a.append(review)
         return a
 
-    def get_user_detail(self, obj):
-        user_obj = obj.user
-        user = UserSerializer(user_obj).data
-        return user
 
-    def get_category_detail(self, obj):
-        category_obj = obj.category
-        category = EventCategorySerializer(category_obj).data
-        return category
+class CreateEventSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Event
+        fields = (
+            'id', 'owner_group', 'title', 'about',
+            'image', 'category', 'timestamp',
+            'location', 'event_date', 'event_time_start',
+            'event_time_end', 'chief_guest'
+        )
+        read_only_fields = ('id', 'owner_group', )
 
 
 class EventMemberSerializer(serializers.ModelSerializer):
-    event_title = serializers.SerializerMethodField()
-    id = serializers.SerializerMethodField()
-
     class Meta:
-        model = EventMember
-        fields = (
-            'id',
-            'event',
-            'event_title',
-            'quantity'
-        )
-        read_only_fields = ('user', 'timestamp')
+        model = Event
+        fields = ('id', 'member', 'title')
+        read_only_fields = ('id', 'title')
 
-    def get_id(self, obj):
-        return obj.user.id
+#     def get_user(self, obj):
+#         return obj.user
 
-    def get_event_title(self, obj):
-        return obj.event.title
+#     def get_event_title(self, obj):
+#         return obj.event.title
+
+#     def create(self, validated_data):
+#         user = validated_data.pop('member', None)
+#         eventa = super().create(validated_data)
+
+#         if user:
+#             eventa.user.set(user)
+#             eventa.save()
+
+#         return eventa
 
 
-class EventMemberCreateSerializer(serializers.ModelSerializer):
+# class EventMemberCreateSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = EventMember
-        fields = '__all__'
+#     class Meta:
+#         model = EventMember
+#         fields = '__all__'

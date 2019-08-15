@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 
-from events.models import EventCategory
+# from events.models import EventCategory
 
 
 class UserManager(BaseUserManager):
@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(
         max_length=255, blank=False, verbose_name='last name')
     interests = models.ManyToManyField(
-        EventCategory,
+        'events.EventCategory',
         related_name='interests_category',
         blank=True)
     admin = models.BooleanField(default=False)
@@ -62,3 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         # The user is identified by their email address
         return "{} {}".format(self.first_name, self.last_name)
+
+    # @classmethod
+    # def prints(cls):
+    #     print('10')

@@ -1,48 +1,63 @@
-from rest_framework import viewsets, status
-from rest_framework import views
-from rest_framework import mixins
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, \
-    IsAdminUser, AllowAny
+from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
 from app.permissions import IsOwnerOrAdminOrReadOnly, IsOwnerOrReadOnly, \
-    IsAdminOrReadOnly
+    IsOwnerGroupOrReadOnly
 
 from django.db.models import Q
-from rest_framework.response import Response
-from events.api.serializers import EventCategorySerializer, EventReviewSerializer, \
-    EventSerializer, EventMemberSerializer, EventMemberCreateSerializer
-from events.models import Event, EventCategory, EventReview, EventMember
+from events.api.serializers import EventCategorySerializer, EventSerializer, \
+    EventMemberSerializer, EventReviewSerializer
+from events.models import Event, EventCategory, EventReview
 
 
-class EventViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsOwnerOrAdminOrReadOnly]
-    serializer_class = EventSerializer
-
-    def get_queryset(self):
-        query = Event.objects.all()
-        if(self.request.GET.get('no')):
-            no = self.request.GET.get('no')
-            query = query[:no]
-        if(self.request.GET.get('user')):
-            query = query.filter(user=self.request.GET.get('user'))
-        if(self.request.GET.get('title')):
-            query = query.filter(
-                Q(title__icontains=self.request.GET.get('title'))
-            )
-        if(self.request.GET.get('category')):
-            query = query.filter(
-                Q(category=self.request.GET.get('category'))
-            )
-        return query
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-
-class EventCategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class EventCategoryView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = EventCategorySerializer
     queryset = EventCategory.objects.all()
+
+
+class ListEventView(generics.ListAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        queryset = Event.objects.all()
+        member = self.request.GET.get('member')
+        title = self.request.GET.get('title')
+        category = self.request.GET.get('category')
+        event_id = self.request.GET.get('id')
+        if member:
+            queryset = queryset.filter(member=member)
+        if title:
+            queryset = queryset.filter(
+                Q(title__icontains=title)
+            )
+        if category:
+            queryset = queryset.filter(
+                Q(category=category)
+            )
+        if event_id:
+            queryset = queryset.filter(id=event_id)
+        return queryset
+
+
+class CreateEventView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = EventSerializer
+    queryset = Event.objects.all()
+
+    # def perform_create(self, serializer):
+    #     serializer.save(owner_group=owner_group)
+
+
+class ManageEventView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = EventSerializer
+    permission_classes = [IsOwnerGroupOrReadOnly]
+    lookup_url_kwarg = 'event_id'
+
+    def get_queryset(self):
+        queryset = Event.objects.all()
+        return queryset
 
 
 class EventReviewViewSet(viewsets.ModelViewSet):
@@ -53,10 +68,9 @@ class EventReviewViewSet(viewsets.ModelViewSet):
         queryset = EventReview.objects.all()
         user = self.request.GET.get('user')
         q = self.request.GET.get('q')
-        if(user):
-            print(user)
+        if user:
             queryset = queryset.filter(user=user)
-        if(q):
+        if q:
             queryset = queryset.filter(review__icontains=q)
         return queryset
 
@@ -64,26 +78,28 @@ class EventReviewViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class EventMemberViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsOwnerOrReadOnly]
+class EventMemberView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = EventMemberSerializer
+    queryset = Event.objects.all()
+    lookup_url_kwarg = 'event_id'
 
-    def get_queryset(self):
-        queryset = EventMember.objects.all()
-        user = self.request.GET.get('user')
-        q = self.request.GET.get('q')
-        if(user):
-            print(user)
-            queryset = queryset.filter(user=user)
-        if(q):
-            queryset = queryset.filter(event__title__icontains=q)
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 
-class EventMembersCreateViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    queryset = EventMember.objects.all()
-    serializer_class = EventMemberCreateSerializer
+# class JoinEventView()
+
+# #     def get_serializer_class(self):
+#         if self.request.method == 'POST':
+#             return CreateEventMemberSerializer
+#         return EventMemberSerializer
+
+
+# class EventMembersCreateViewSet(viewsets.ModelViewSet):
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+#     queryset = EventMember.objects.all()
+#     serializer_class = EventMemberCreateSerializer
+
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)

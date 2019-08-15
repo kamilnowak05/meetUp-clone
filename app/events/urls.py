@@ -1,22 +1,23 @@
 from django.urls import path, include
 
-from events.api.views import EventViewSet, EventCategoryViewSet, \
-    EventReviewViewSet, EventMemberViewSet
-
 from rest_framework.routers import DefaultRouter
+
+from events.api import views
 
 
 app_name = 'events'
 
-router = DefaultRouter()
-router.register(r'events', EventViewSet, base_name='events')
-router.register(r'event-category', EventCategoryViewSet,
-                base_name='event-category')
-router.register(r'event-review', EventReviewViewSet, base_name='event-review')
-router.register(r'event-members', EventMemberViewSet,
-                base_name='event-members')
-
+router = DefaultRouter(trailing_slash=False)
+router.register('EventReviev', views.EventReviewViewSet, basename='reviev')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('list/', views.ListEventView.as_view(), name='list'),
+    path('list/<int:id>/', views.ListEventView.as_view(), name='list'),
+    path('create/', views.CreateEventView.as_view(), name='create'),
+    path('manage/<int:event_id>/', views.ManageEventView.as_view(),
+         name='manage'),
+    path('category/', views.EventCategoryView.as_view(), name='category'),
+    path('members/<int:event_id>/', views.EventMemberView.as_view(),
+         name='members')
 ]

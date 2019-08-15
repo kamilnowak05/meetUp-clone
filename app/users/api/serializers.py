@@ -1,10 +1,9 @@
 from django.contrib.auth import authenticate, get_user_model
-from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import serializers
 
-# User = settings.AUTH_USER_MODEL
+
 User = get_user_model()
 
 
@@ -13,10 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
-            'email', 'password', 'first_name',
-            'last_name', 'interests'
-        )
+        fields = ('id',
+                  'email', 'password', 'first_name',
+                  'last_name', 'interests'
+                  )
         read_only_fields = (
             'id', 'last_login', 'is_active', 'user_permissions',
             'is_staff', 'admin'
@@ -25,15 +24,30 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """ Create a new user with encrypted password and return it"""
-        return User.objects.create_user(**validated_data)
+        intrests = validated_data.pop('interests_category', None)
+        password = validated_data.pop('password', None)
+        user = super().create(validated_data)
+
+        if password:
+            user.set_password(password)
+            user.save()
+        if intrests:
+            user.interests.set(intrests)
+            user.save()
+
+        return user
 
     def update(self, instance, validated_data):
         """Update a user, setting the password correctly and return it"""
         password = validated_data.pop('password', None)
+        intrests = validated_data.pop('interests_category', None)
         user = super().update(instance, validated_data)
 
         if password:
             user.set_password(password)
+            user.save()
+        if intrests:
+            user.interests.set(intrests)
             user.save()
 
         return user
