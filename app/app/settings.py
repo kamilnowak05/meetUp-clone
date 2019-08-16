@@ -41,9 +41,13 @@ INSTALLED_APPS = [
     # local
     'rest_framework',
     'rest_framework.authtoken',
-    'core',
-    'user',
-    'meetup',
+    'users',
+    'groups',
+    'events',
+
+    # old
+    # 'user',
+    # 'meetup',
 ]
 
 MIDDLEWARE = [
@@ -134,7 +138,7 @@ MEDIA_ROOT = 'media/'
 STATIC_ROOT = 'static/'
 
 
-AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'users.User'
 
 
 REST_FRAMEWORK = {

@@ -8,10 +8,10 @@ class IsOwnerOrAdminOrReadOnly(BasePermission):
         if request.method in ['GET']:
             return True
         try:
-            if(request.user):
+            if request.user:
                 return obj.user == request.user or request.user.admin
-        except:
-            pass
+        except Exception:
+            return self.message
 
 
 class IsOwnerOrReadOnly(BasePermission):
@@ -20,7 +20,16 @@ class IsOwnerOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method == 'GET':
             return True
-        return obj.user == request.user
+        return obj.owner == request.user
+
+
+class IsOwnerGroupOrReadOnly(BasePermission):
+    message = "You have to be owner of this object"
+
+    def has_object_permission(self, request, view, obj):
+        if request.method == 'GET':
+            return True
+        return obj.owner_group.owner == request.user
 
 
 class IsOwnerOrAdmin(BasePermission):
@@ -40,22 +49,14 @@ class IsOwnerOrAdmin(BasePermission):
 
 
 # class IsAdminOrReadOnly(BasePermission):
-#     message = "you must the admin"
-#     def has_object_permission(self, request, view, obj):
-#         if request.method == 'GET':
-#             return True
-#         return request.user.admin
+#     """
+#     The request is admin as a user, or is a read-only request.
+#     """
+#     message = "You have to be admin"
 
-
-class IsAdminOrReadOnly(BasePermission):
-    """
-    The request is admin as a user, or is a read-only request.
-    """
-    message = "You have to be admin"
-
-    def has_permission(self, request, view):
-        return bool(
-            request.method in SAFE_METHODS or
-            request.user and
-            request.user.admin
-        )
+#     def has_permission(self, request, view):
+#         return bool(
+#             request.method in SAFE_METHODS or
+#             request.user and
+#             request.user.admin
+#         )
