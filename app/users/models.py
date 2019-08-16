@@ -4,8 +4,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 
-# from events.models import EventCategory
-
 
 class UserManager(BaseUserManager):
 
@@ -62,7 +60,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         # The user is identified by their email address
         return "{} {}".format(self.first_name, self.last_name)
-
-    # @classmethod
-    # def prints(cls):
-    #     print('10')

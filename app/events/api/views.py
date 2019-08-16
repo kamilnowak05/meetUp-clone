@@ -1,8 +1,7 @@
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
-from app.permissions import IsOwnerOrAdminOrReadOnly, IsOwnerOrReadOnly, \
-    IsOwnerGroupOrReadOnly
+from app.permissions import IsOwnerOrAdminOrReadOnly, IsOwnerGroupOrReadOnly
 
 from django.db.models import Q
 from events.api.serializers import EventCategorySerializer, EventSerializer, \
@@ -46,14 +45,10 @@ class CreateEventView(generics.CreateAPIView):
     serializer_class = EventSerializer
     queryset = Event.objects.all()
 
-    # def perform_create(self, serializer):
-    #     serializer.save(owner_group=owner_group)
-
 
 class ManageEventView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EventSerializer
     permission_classes = [IsOwnerGroupOrReadOnly]
-    lookup_url_kwarg = 'event_id'
 
     def get_queryset(self):
         queryset = Event.objects.all()
@@ -82,24 +77,6 @@ class EventMemberView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = EventMemberSerializer
     queryset = Event.objects.all()
-    lookup_url_kwarg = 'event_id'
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
-
-
-# class JoinEventView()
-
-# #     def get_serializer_class(self):
-#         if self.request.method == 'POST':
-#             return CreateEventMemberSerializer
-#         return EventMemberSerializer
-
-
-# class EventMembersCreateViewSet(viewsets.ModelViewSet):
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-#     queryset = EventMember.objects.all()
-#     serializer_class = EventMemberCreateSerializer
-
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)

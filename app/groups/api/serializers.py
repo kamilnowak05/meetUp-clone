@@ -15,17 +15,6 @@ class AppGroupSerializer(serializers.ModelSerializer):
             )
         read_only_fields = ('owner', 'member')
 
-    # def create(self, validated_data):
-    #     group = AppGroup.objects.create(
-    #         owner=self.context['request'].user,
-    #         name=validated_data['name'],
-    #         description=validated_data['description'],
-    #         group_image=validated_data.get('group_image', None)
-    #     )
-    #     group.group_category.set(validated_data['group_category'])
-    #     group.save()
-    #     return group
-
 
 class CreateAppGroupSerializer(serializers.ModelSerializer):
 

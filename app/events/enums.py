@@ -8,7 +8,7 @@ class CategoryEnum(ChoiceEnum):
     family = 'Family'
     health = 'Health'
     sports = 'Sports'
-    film =  'Film'
+    film = 'Film'
     books = 'Books'
     dance = 'Dance'
     arts = 'Arts'

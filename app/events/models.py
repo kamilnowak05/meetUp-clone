@@ -75,23 +75,6 @@ class EventReview(models.Model):
         return self.event.title
 
 
-# class EventMember(models.Model):
-#     user = models.ManyToManyField(
-#         'users.User',
-#         related_name="member"
-#         )
-#     event = models.ForeignKey(
-#         Event,
-#         related_name='event',
-#         on_delete=models.CASCADE
-#         )
-#     quantity = models.PositiveIntegerField(default=1)
-#     timestamp = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return self.event.title
-
-
 def average_rating(sender, instance, *args, **kwargs):
     qs = EventReview.objects.filter(event=instance.event.id)
     reviews = [review.rating for review in qs]
