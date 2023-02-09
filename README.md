@@ -3,6 +3,18 @@ meetUp-clone app rest api source code
 
 # It's my implementation of the meetUp REST API.
 
+## Pre-commit:
+To install pre-commit hook, run:
+```
+pre-commit install
+```
+
+Run:
+```
+pre-commit run --all-files
+```
+
+
 ## Features:
 
 -   management user account (register, login, logout, manage)
@@ -21,7 +33,7 @@ meetUp-clone app rest api source code
 - localhost:8000/api/users/login/
 - localhost:8000/api/users/logout/
 - localhost:8000/api/users/me/
-- localhost:8000/api/users/<slug:id>/
+- localhost:8000/api/users/'<slug:id>'/
 - localhost:8000/api/groups/list/
 - localhost:8000/api/groups/list/?owner=owner
 - localhost:8000/api/groups/list/?id=group_id
@@ -41,4 +53,3 @@ meetUp-clone app rest api source code
 - localhost:8000/api/events/reviev/?q=reviev_icontains
 - localhost:8000/api/events/reviev/?user=user
 - localhost:8000/api/events/reviev/<int:id>
-
