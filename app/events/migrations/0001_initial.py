@@ -9,7 +9,7 @@ from events.enums import CategoryEnum
 
 def create_category(apps, schema_editor):
     EventCatgory = apps.get_model("events", "EventCategory")
-    for key, val in CategoryEnum.choices():
+    for key, val in CategoryEnum.__members__.items():
         EventCatgory.objects.create(name=val)
 
 
