@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "Please set something in production")
 DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 
 # Application definition
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "users",
     "groups",
-    "events"
+    "events",
 ]
 
 MIDDLEWARE = [

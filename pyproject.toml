@@ -12,8 +12,8 @@ exclude = '''
 
 [tool.isort]
 line_length = 120
-known_standard_library = ''
-known_third_party = ''
+known_standard_library = 'os,sys'
+known_third_party = 'django, rest_framework, uuid'
 indent = '    '
 multi_line_output = 3
 default_section = 'FIRSTPARTY'

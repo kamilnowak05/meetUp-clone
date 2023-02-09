@@ -1,6 +1,7 @@
 from django.urls import include, path
-from events.api import views
 from rest_framework.routers import DefaultRouter
+
+from events.api import views
 
 app_name = "events"
 

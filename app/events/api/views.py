@@ -1,5 +1,8 @@
-from app.permissions import IsOwnerGroupOrReadOnly, IsOwnerOrAdminOrReadOnly
 from django.db.models import Q
+from rest_framework import generics, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+
+from app.permissions import IsOwnerGroupOrReadOnly, IsOwnerOrAdminOrReadOnly
 from events.api.serializers import (
     EventCategorySerializer,
     EventMemberSerializer,
@@ -7,8 +10,6 @@ from events.api.serializers import (
     EventSerializer,
 )
 from events.models import Event, EventCategory, EventReview
-from rest_framework import generics, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 
 
 class EventCategoryView(generics.ListAPIView):

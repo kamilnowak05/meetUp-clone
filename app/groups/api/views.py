@@ -1,8 +1,9 @@
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 from app.permissions import IsOwnerOrReadOnly
 from groups.api.serializers import AppGroupSerializer, CreateAppGroupSerializer, MembersAppGroupSerializer
 from groups.models import AppGroup
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class ListAppGroupView(generics.ListAPIView):

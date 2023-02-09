@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
-from groups.models import AppGroup
 from rest_framework import serializers
+
+from groups.models import AppGroup
 
 User = get_user_model()
 

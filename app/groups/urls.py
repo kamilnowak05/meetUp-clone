@@ -1,4 +1,5 @@
 from django.urls import path
+
 from groups.api import views
 
 app_name = "groups"

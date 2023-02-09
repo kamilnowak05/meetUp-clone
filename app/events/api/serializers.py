@@ -1,5 +1,6 @@
-from events.models import Event, EventCategory, EventReview
 from rest_framework import serializers
+
+from events.models import Event, EventCategory, EventReview
 
 
 class EventCategorySerializer(serializers.ModelSerializer):
