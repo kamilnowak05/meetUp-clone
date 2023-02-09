@@ -29,6 +29,7 @@ pre-commit run --all-files
 -   PostgreSQL
 
 ## Default urls:
+```djangourlpath
 - localhost:8000/api/users/register/
 - localhost:8000/api/users/login/
 - localhost:8000/api/users/logout/
@@ -53,3 +54,4 @@ pre-commit run --all-files
 - localhost:8000/api/events/reviev/?q=reviev_icontains
 - localhost:8000/api/events/reviev/?user=user
 - localhost:8000/api/events/reviev/<int:id>
+```
