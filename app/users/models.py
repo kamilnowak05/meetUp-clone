@@ -1,17 +1,16 @@
 import uuid
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
-    PermissionsMixin
 
 
 class UserManager(BaseUserManager):
-
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email: str, password: str | None = None, **extra_fields: dict[str, str]) -> "User":
         """Create and saves a new user"""
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
         user = self.model(email=self.normalize_email(email), **extra_fields)
+        if not isinstance(user, User):
+            raise TypeError("User is not of type User")
         user.set_password(password)
         user.save(using=self._db)
 
@@ -35,16 +34,12 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email of username"""
+
     id = models.UUIDField(unique=True, default=uuid.uuid4, primary_key=True)
     email = models.EmailField(max_length=255, unique=True)
-    first_name = models.CharField(
-        max_length=255, blank=False, verbose_name='first name')
-    last_name = models.CharField(
-        max_length=255, blank=False, verbose_name='last name')
-    interests = models.ManyToManyField(
-        'events.EventCategory',
-        related_name='interests_category',
-        blank=True)
+    first_name = models.CharField(max_length=255, blank=False, verbose_name="first name")
+    last_name = models.CharField(max_length=255, blank=False, verbose_name="last name")
+    interests = models.ManyToManyField("events.EventCategory", related_name="interests_category", blank=True)
     admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -52,7 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
 
     def __str__(self):
         return self.email

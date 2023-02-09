@@ -1,0 +1,36 @@
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+line_length = 120
+known_standard_library = 'enum,os,sys,time'
+known_third_party = 'django, rest_framework, uuid'
+indent = '    '
+multi_line_output = 3
+default_section = 'FIRSTPARTY'
+combine_as_imports = true
+use_parentheses = true
+profile = 'black'
+
+[tool.pylint.message_control]
+disable=[
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "protected-access",
+    "redefined-builtin",
+    "invalid-name",
+    "no-name-in-module",
+    "too-few-public-methods",
+    "no-self-argument",
+    "import-outside-toplevel"
+]

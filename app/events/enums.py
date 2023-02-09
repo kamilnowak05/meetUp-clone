@@ -1,14 +1,14 @@
-from commons.choice_enum import ChoiceEnum
+from enum import Enum
 
 
-class CategoryEnum(ChoiceEnum):
-    adventure = 'Adventure'
-    food = 'Food'
-    tech = 'Tech'
-    family = 'Family'
-    health = 'Health'
-    sports = 'Sports'
-    film = 'Film'
-    books = 'Books'
-    dance = 'Dance'
-    arts = 'Arts'
+class CategoryEnum(Enum):
+    adventure = "Adventure"
+    food = "Food"
+    tech = "Tech"
+    family = "Family"
+    health = "Health"
+    sports = "Sports"
+    film = "Film"
+    books = "Books"
+    dance = "Dance"
+    arts = "Arts"

@@ -1,11 +1,9 @@
-from groups.models import AppGroup
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from app.permissions import IsOwnerOrReadOnly
-
-from groups.api.serializers import AppGroupSerializer, \
-    CreateAppGroupSerializer, MembersAppGroupSerializer
+from groups.api.serializers import AppGroupSerializer, CreateAppGroupSerializer, MembersAppGroupSerializer
+from groups.models import AppGroup
 
 
 class ListAppGroupView(generics.ListAPIView):
@@ -14,8 +12,8 @@ class ListAppGroupView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = AppGroup.objects.all()
-        owner = self.request.GET.get('owner')
-        group_id = self.request.GET.get('id')
+        owner = self.request.GET.get("owner")
+        group_id = self.request.GET.get("id")
         if owner:
             queryset = queryset.filter(owner=owner)
         if group_id:
@@ -43,5 +41,5 @@ class ManageAppGroupView(generics.RetrieveUpdateDestroyAPIView):
 
 class MembersAppGroupView(generics.UpdateAPIView):
     serializer_class = MembersAppGroupSerializer
-    lookup_url_kwarg = 'group_id'
+    lookup_url_kwarg = "group_id"
     queryset = AppGroup.objects.all()
