@@ -42,17 +42,3 @@ class IsOwnerOrAdmin(BasePermission):
 
     def has_permission(self, request, view):
         return bool(request.method in SAFE_METHODS or request.user and request.user.admin)
-
-
-# class IsAdminOrReadOnly(BasePermission):
-#     """
-#     The request is admin as a user, or is a read-only request.
-#     """
-#     message = "You have to be admin"
-
-#     def has_permission(self, request, view):
-#         return bool(
-#             request.method in SAFE_METHODS or
-#             request.user and
-#             request.user.admin
-#         )
