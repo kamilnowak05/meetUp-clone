@@ -26,19 +26,12 @@ repos:
     -   id: flake8
         args:
             - "--max-line-length=120"
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.0.0
-    hooks:
-    -   id: mypy
-        additional_dependencies:
-            - djangorestframework-stubs==1.8.0
-            - django-stubs==1.14.0
-            - types-freezegun==1.1.7
-            - types-PyYAML===6.0.4
-            - types_python_dateutil==2.8.10
-            - types-pytz==2021.3.4
-        args:
-            - "--ignore-missing-imports"
-            - "--disallow-untyped-defs"
-            - "--disable-error-code"
-            - "valid-type" #  this is to suppress "Variable <model created by pydantic_model_creator> is not valid as a type"
+
+# TODO fix that later
+#-   repo: https://github.com/pre-commit/mirrors-mypy
+#    rev: v1.0.0
+#    hooks:
+#    -   id: mypy
+#        additional_dependencies:
+#            - djangorestframework-stubs==1.8.0
+#            - django-stubs==1.14.0

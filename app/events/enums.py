@@ -1,7 +1,7 @@
-from commons.choice_enum import ChoiceEnum
+from enum import Enum
 
 
-class CategoryEnum(ChoiceEnum):
+class CategoryEnum(Enum):
     adventure = "Adventure"
     food = "Food"
     tech = "Tech"

@@ -12,7 +12,7 @@ exclude = '''
 
 [tool.isort]
 line_length = 120
-known_standard_library = 'os,sys'
+known_standard_library = 'enum,os,sys,time'
 known_third_party = 'django, rest_framework, uuid'
 indent = '    '
 multi_line_output = 3
