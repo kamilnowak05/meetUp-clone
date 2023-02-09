@@ -24,7 +24,7 @@ pre-commit run --all-files
 
 ## Technology Stack:
 
--   Python
+-   Python 3.11
 -   Django and Django Rest Framework
 -   PostgreSQL
 
